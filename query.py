@@ -87,10 +87,10 @@ def query3():
     """
     docs = db.airbnb.aggregate([
         {'$group': {
-                '_id': '$neighbourhood_group',
+                '_id': '$neighbourhood_group', 
                 'average_price': {'$avg': '$price'}
             }
-        },
+        }, 
         {'$sort': {'average_price': -1}}
     ])
 
@@ -120,7 +120,7 @@ def query4():
                                             '$subtract': ['$pickup_latitude', '$dropoff_latitude']
                                             }}
                                         ]}}, 
-                'passenger_count': {'$avg': '$passenger_count'}
+                'count':{'$sum': 1}
             }},
          {
             '$sort': {"average_fare": -1}
