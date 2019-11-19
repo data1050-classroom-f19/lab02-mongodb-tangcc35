@@ -88,10 +88,10 @@ def query3():
     docs = db.airbnb.aggregate([
         {'$group': {
                 '_id': '$neighbourhood_group', 
-                'average_price': {'$avg': '$price'}
+                'avg_price': {'$avg': '$price'}
             }
         }, 
-        {'$sort': {'average_price': -1}}
+        {'$sort': {'avg_price': -1}}
     ])
 
     result = [doc for doc in docs]
@@ -111,8 +111,8 @@ def query4():
     docs = db.taxi.aggregate([
         {'$group': {
                 '_id': {'$hour': '$pickup_datetime'}, 
-                'average_fare': {'$avg': '$fare_amount'}, 
-                'average_dist': {'$avg': {'$add': [
+                'avg_fare': {'$avg': '$fare_amount'}, 
+                'avg_dist': {'$avg': {'$add': [
                                         {'$abs': {
                                             '$subtract': ['$pickup_longitude', '$dropoff_longitude']
                                             }}, 
@@ -123,7 +123,7 @@ def query4():
                 'count':{'$sum': 1}
             }},
          {
-            '$sort': {"average_fare": -1}
+            '$sort': {"avg_fare": -1}
         }
     ])
 
