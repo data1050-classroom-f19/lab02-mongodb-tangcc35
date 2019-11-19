@@ -22,9 +22,12 @@ def query1(minFare, maxFare):
     Returns:
         An array of documents.
     """
-    docs = db.taxi.find(
-        # TODO: implement me
-    )
+    docs = db.taxi.find({
+        'fare_amount': {
+            '$gte': minFare,
+            '$lte': maxFare
+        }
+    })
 
     result = [doc for doc in docs]
     return result
@@ -76,9 +79,14 @@ def query3():
     Returns:
         An array of documents.
     """
-    docs = db.airbnb.aggregate(
-        # TODO: implement me
-    )
+    docs = db.airbnb.aggregate([
+        {'$group': {
+                '_id': '$neighbourhood_group',
+                'average_price': {'$avg': '$price'}
+            }
+        },
+        {'$sort': {'average_price': -1}}
+    ])
 
     result = [doc for doc in docs]
     return result
@@ -119,8 +127,29 @@ def query5():
 
 
     """
-    docs = db.airbnb.aggregate(
-        # TODO: implement me
-    )
-    result = [doc for doc in docs]
-    return result
+    docs = db.airbnb.aggregate([
+       {
+           '$geoNear': {
+               'near': {'type': 'Point', 'coordinates': [longitude, latitude]},
+               'distanceField': 'dist.calculated',
+               'maxDistance': 1000,
+               'spherical': False
+           }
+       },
+       {
+           '$project': {
+               '_id': 0,
+               'dist': 1,
+               'name': 1,
+               'neighbourhood': 1,
+               'neighbourhood_group': 1,
+               'price': 1,
+               'room_type': 1
+           }
+       },
+       {
+           '$sort': {'dist': 1}
+       }
+   ])
+   result = [doc for doc in docs]
+   return result
